@@ -20,59 +20,84 @@ bool checkNum(char c) {
 	else
 		return false;
 }
+bool empty(mahjong &m) {
+	if (m.EE == 0 && m.SS == 0 && m.WW == 0 && m.NN == 0 && m.RC == 0 && m.GF == 0 && m.WB == 0) {
+		for (int i = 0; i != 9; i++) {
+			if (m.W[i] != 0 || m.B[i] != 0 || m.T[i] != 0)
+				return false;
+		}
+		return true;
+	}
+	else
+		return false;
+}
 void check(mahjong &m, string &name) {
-	int s = 0/*順子*/, k = 0/*刻子*/, j = 0/*將*/, i;
-	//順子
-	for (i = 0; i != 7; i++) {
-		if (m.B[i] >= 1 && m.B[i + 1] >= 1 && m.B[i + 2] >= 1) {
-			s++;
-			m.B[i]--, m.B[i + 1]--, m.B[i + 2]--;
+	int s = 0/*順子*/, k = 0/*刻子*/, j = 0/*將*/, i,t=0;
+	while (empty(m) == false&&t<=4) {
+		if (t > 4) {
+			printf("Nothing happened.\n");
 		}
-		if (m.W[i] >= 1 && m.W[i + 1] >= 1 && m.W[i + 2] >= 1) {
-			s++;
-			m.W[i]--, m.W[i + 1]--, m.W[i + 2]--;
+		//順子
+		for (i = 0; i != 7; i++) {
+			if (m.B[i] >= 1 && m.B[i + 1] >= 1 && m.B[i + 2] >= 1) {
+				s++;
+				m.B[i]--, m.B[i + 1]--, m.B[i + 2]--;
+			}
+			if (m.W[i] >= 1 && m.W[i + 1] >= 1 && m.W[i + 2] >= 1) {
+				s++;
+				m.W[i]--, m.W[i + 1]--, m.W[i + 2]--;
+			}
+			if (m.T[i] >= 1 && m.T[i + 1] >= 1 && m.T[i + 2] >= 1) {
+				s++;
+				m.T[i]--, m.T[i + 1]--, m.T[i + 2]--;
+			}
 		}
-		if (m.T[i] >= 1 && m.T[i + 1] >= 1 && m.T[i + 2] >= 1) {
-			s++;
-			m.T[i]--, m.T[i + 1]--, m.T[i + 2]--;
+		//刻子 
+		if (m.EE >= 3) { k++; m.EE -= 3; }
+		if (m.SS >= 3) { k++; m.SS -= 3; }
+		if (m.WW >= 3) { k++; m.WW -= 3; }
+		if (m.NN >= 3) { k++; m.NN -= 3; }
+		if (m.RC >= 3) { k++; m.RC -= 3; }
+		if (m.GF >= 3) { k++; m.GF -= 3; }
+		if (m.WB >= 3) { k++; m.WB -= 3; }
+		for (i = 0; i != 9; i++) {
+			if (m.B[i] >= 3) {
+				k++;
+				m.B[i] -= 3;
+			}
+			if (m.T[i] >= 3) {
+				k++;
+				m.T[i] -= 3;
+			}
+			if (m.W[i] >= 3) {
+				k++;
+				m.W[i] -= 3;
+			}
 		}
-	}
-	//刻子 
-	if (m.EE >= 3) { k++; m.EE -= 3; }
-	if (m.SS >= 3) { k++; m.SS -= 3; }
-	if (m.WW >= 3) { k++; m.WW -= 3; }
-	if (m.NN >= 3) { k++; m.NN -= 3; }
-	if (m.RC >= 3) { k++; m.RC -= 3; }
-	if (m.GF >= 3) { k++; m.GF -= 3; }
-	if (m.WB >= 3) { k++; m.WB -= 3; }
-
-	for (i = 0; i != 9; i++) {
-		if (m.B[i] >= 3) {
-			k++;
-			m.B[i] -= 3;
+		//將 
+		if (m.EE == 2) {j++;	m.EE -= 2;}
+		if (m.WW == 2) {j++;	m.WW -= 2;}
+		if (m.SS == 2) {j++;	m.SS -= 2;}
+		if (m.NN == 2) {j++;	m.NN -= 2;}
+		if (m.RC == 2) {j++;	m.RC -= 2;}
+		if (m.GF == 2) {j++;	m.GF -= 2;}
+		if (m.WB == 2) {j++;	m.WB -= 2;}
+		for (i = 0; i != 9; i++) {
+			if (m.B[i] >= 2 || m.T[i] >= 2 || m.W[i] >= 2) {
+				j++;
+				if (m.B[i] >= 2)	m.B[i] -= 2;
+				if (m.T[i] >= 2)	m.T[i] -= 2;
+				if (m.W[i] >= 2)	m.W[i] -= 2;
+			}
 		}
-		if (m.T[i] >= 3) {
-			k++;
-			m.T[i] -= 3;
-		}
-		if (m.W[i] >= 3) {
-			k++;
-			m.W[i] -= 3;
-		}
-	}
-	//將 
-	if (m.EE == 2 || m.SS == 2 || m.WW == 2 || m.NN == 2 || m.RC == 2 || m.GF == 2 || m.WB == 2)
-		j++;
-	for (i = 0; i != 9; i++) {
-		if (m.B[i] >= 2 || m.T[i] >= 2 || m.W[i] >= 2)
-			j++;
+		t++;
 	}
 	if (s + k == 5 && j == 1) {
 		cout << name;
 		printf(" can yell out Mahjong!");
 	}
 	else
-		printf("Nothing happened.\n");
+		printf("Nothing happened.");
 	cout << endl;
 }
 int main()
