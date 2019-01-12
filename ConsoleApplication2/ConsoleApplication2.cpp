@@ -69,10 +69,11 @@ void check(mahjong &m, string &name) {
 	}
 	if (s + k == 5 && j == 1) {
 		cout << name;
-		printf(" can yell out Mahjong!\n");
+		printf(" can yell out Mahjong!");
 	}
 	else
 		printf("Nothing happened.\n");
+	cout << endl;
 }
 int main()
 {
